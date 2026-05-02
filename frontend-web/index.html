@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f6b5d">
+  <title>Gym Tracker</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Primary navigation">
+      <div class="brand">
+        <div class="brand-mark">GT</div>
+        <div>
+          <strong>Gym Tracker</strong>
+          <span>لوحة المتابعة</span>
+        </div>
+      </div>
+
+      <nav class="nav-list">
+        <button class="nav-item active" data-view="dashboard" type="button"><span class="nav-icon">⌂</span><span>الرئيسية</span></button>
+        <button class="nav-item" data-view="workouts" type="button"><span class="nav-icon">▦</span><span>التمارين</span></button>
+        <button class="nav-item" data-view="nutrition" type="button"><span class="nav-icon">◐</span><span>التغذية</span></button>
+        <button class="nav-item" data-view="progress" type="button"><span class="nav-icon">⌁</span><span>التقدم</span></button>
+        <button class="nav-item" data-view="goals" type="button"><span class="nav-icon">◎</span><span>الأهداف</span></button>
+      </nav>
+
+      <div class="sidebar-card">
+        <span class="eyebrow">هذا الأسبوع</span>
+        <strong>3 / 4 تمارين</strong>
+        <div class="mini-meter"><span style="width:75%"></span></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <p class="date-label" id="todayLabel">اليوم</p>
+          <h1 id="viewTitle">الرئيسية</h1>
+        </div>
+        <div class="topbar-actions">
+          <button class="icon-button" id="themeToggle" type="button" aria-label="تبديل الثيم" title="تبديل الثيم">◑</button>
+          <button class="primary-button" id="quickLogBtn" type="button"><span>+</span> تسجيل سريع</button>
+        </div>
+      </header>
+
+      <section class="view active" id="dashboard">
+        <div class="dashboard-grid">
+          <article class="hero-panel">
+            <div>
+              <span class="eyebrow">ملخص اليوم</span>
+              <h2>أداء ثابت، باقي وجبة وتمرين خفيف</h2>
+              <p>السعرات والبروتين قريبين من الهدف، وتمرين Push جاهز للتسجيل.</p>
+            </div>
+            <div class="rings">
+              <div class="ring" style="--value:76;--ring:#1f7a6d"><span>76%</span><small>سعرات</small></div>
+              <div class="ring" style="--value:89;--ring:#d4892f"><span>89%</span><small>بروتين</small></div>
+            </div>
+          </article>
+
+          <article class="stat-card">
+            <span>السعرات</span>
+            <strong>1,840</strong>
+            <small>من 2,400 kcal</small>
+          </article>
+          <article class="stat-card">
+            <span>البروتين</span>
+            <strong>142g</strong>
+            <small>من 160g</small>
+          </article>
+          <article class="stat-card">
+            <span>الوزن</span>
+            <strong>84.2</strong>
+            <small>-0.6 kg هذا الشهر</small>
+          </article>
+          <article class="stat-card">
+            <span>حجم التمرين</span>
+            <strong>12.4k</strong>
+            <small>kg volume</small>
+          </article>
+        </div>
+
+        <div class="content-grid">
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <span class="eyebrow">تمرين اليوم</span>
+                <h3>Push Day</h3>
+              </div>
+              <button class="ghost-button" data-view-jump="workouts" type="button">فتح</button>
+            </div>
+            <div class="exercise-list" id="todayWorkout"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <span class="eyebrow">آخر 7 أيام</span>
+                <h3>النشاط</h3>
+              </div>
+            </div>
+            <canvas id="activityChart" height="190" aria-label="Activity chart"></canvas>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="workouts">
+        <div class="split-layout">
+          <article class="panel workout-builder">
+            <div class="panel-header">
+              <div>
+                <span class="eyebrow">Workout</span>
+                <h3>Push Day</h3>
+              </div>
+              <button class="primary-button compact" id="finishWorkoutBtn" type="button">إنهاء التمرين</button>
+            </div>
+            <div id="workoutEditor"></div>
+          </article>
+
+          <aside class="panel">
+            <div class="panel-header">
+              <div>
+                <span class="eyebrow">Templates</span>
+                <h3>جدول الأسبوع</h3>
+              </div>
+            </div>
+            <div class="template-list" id="templateList"></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view" id="nutrition">
+        <div class="content-grid nutrition-grid">
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <span class="eyebrow">Macros</span>
+                <h3>تغذية اليوم</h3>
+              </div>
+              <button class="ghost-button" id="addMealBtn" type="button">إضافة وجبة</button>
+            </div>
+            <div class="macro-stack" id="macroStack"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <span class="eyebrow">Meals</span>
+                <h3>الوجبات</h3>
+              </div>
+            </div>
+            <div class="meal-list" id="mealList"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="progress">
+        <div class="content-grid">
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <span class="eyebrow">Body</span>
+                <h3>الوزن والقياسات</h3>
+              </div>
+            </div>
+            <canvas id="weightChart" height="230" aria-label="Weight chart"></canvas>
+          </article>
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <span class="eyebrow">Records</span>
+                <h3>أرقام شخصية</h3>
+              </div>
+            </div>
+            <div class="record-list" id="recordList"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="goals">
+        <div class="goals-grid" id="goalsGrid"></div>
+      </section>
+    </main>
+
+    <nav class="mobile-nav" aria-label="Mobile navigation">
+      <button class="mobile-nav-item active" data-view="dashboard" type="button">⌂<span>الرئيسية</span></button>
+      <button class="mobile-nav-item" data-view="workouts" type="button">▦<span>تمارين</span></button>
+      <button class="mobile-nav-item" data-view="nutrition" type="button">◐<span>تغذية</span></button>
+      <button class="mobile-nav-item" data-view="progress" type="button">⌁<span>تقدم</span></button>
+      <button class="mobile-nav-item" data-view="goals" type="button">◎<span>أهداف</span></button>
+    </nav>
+  </div>
+
+  <dialog class="quick-dialog" id="quickDialog">
+    <form method="dialog">
+      <div class="panel-header">
+        <div>
+          <span class="eyebrow">Quick Log</span>
+          <h3>تسجيل سريع</h3>
+        </div>
+        <button class="icon-button" value="cancel" type="submit" aria-label="إغلاق">×</button>
+      </div>
+      <div class="quick-grid">
+        <label>النوع
+          <select id="quickType">
+            <option value="workout">تمرين</option>
+            <option value="meal">وجبة</option>
+            <option value="weight">وزن</option>
+          </select>
+        </label>
+        <label>القيمة
+          <input id="quickValue" placeholder="مثال: 84.2 أو 500 kcal">
+        </label>
+        <label class="full">ملاحظة
+          <textarea id="quickNote" rows="3" placeholder="اكتب ملاحظة قصيرة"></textarea>
+        </label>
+      </div>
+      <menu>
+        <button class="ghost-button" value="cancel" type="submit">إلغاء</button>
+        <button class="primary-button" id="saveQuickLog" value="default" type="submit">حفظ</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="./app.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:8px 0 16px}
+.step-row{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.step-box{flex:1;min-width:140px;border:0.5px solid var(--color-border-secondary);border-radius:10px;overflow:hidden}
+.step-head{padding:8px 12px;font-size:12px;font-weight:500}
+.step-body{padding:8px 12px}
+.field-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:12px}
+.field-row:last-child{border-bottom:none}
+.field-name{color:var(--color-text-primary)}
+.field-why{color:var(--color-text-secondary);font-size:11px;text-align:right;max-width:120px}
+.badge{font-size:10px;padding:2px 6px;border-radius:4px;margin-left:4px}
+.req{background:#E6F1FB;color:#185FA5}
+.opt{background:#EAF3DE;color:#3B6D11}
+.arrow-row{text-align:center;color:var(--color-text-tertiary);font-size:13px;margin:4px 0}
+.note{font-size:12px;color:var(--color-text-secondary);background:var(--color-background-secondary);border-radius:8px;padding:10px 14px;border-left:2.5px solid #185FA5;margin-top:10px;line-height:1.7}
+</style>
+<div class="wrap">
+
+<div class="step-row">
+  <div class="step-box">
+    <div class="step-head" style="background:#E6F1FB;color:#0C447C">Step 1 — الجسم</div>
+    <div class="step-body">
+      <div class="field-row"><span class="field-name">الجنس <span class="badge req">مطلوب</span></span><span class="field-why">يغيّر معادلة BMR بـ ±166</span></div>
+      <div class="field-row"><span class="field-name">العمر <span class="badge req">مطلوب</span></span><span class="field-why">كل 10 سنين يقلل BMR ~70 cal</span></div>
+      <div class="field-row"><span class="field-name">الطول <span class="badge req">مطلوب</span></span><span class="field-why">مكوّن أساسي في Mifflin</span></div>
+      <div class="field-row"><span class="field-name">الوزن الحالي <span class="badge req">مطلوب</span></span><span class="field-why">أكبر متغيّر في الحساب</span></div>
+      <div class="field-row"><span class="field-name">Body Fat % <span class="badge opt">اختياري</span></span><span class="field-why">يتيح Katch-McArdle الأدق</span></div>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-head" style="background:#EEEDFE;color:#3C3489">Step 2 — الهدف</div>
+    <div class="step-body">
+      <div class="field-row"><span class="field-name">الهدف <span class="badge req">مطلوب</span></span><span class="field-why">يحدد الـ calorie offset</span></div>
+      <div class="field-row"><span class="field-name">الوزن المستهدف <span class="badge req">مطلوب</span></span><span class="field-why">يحسب المدة الزمنية</span></div>
+      <div class="field-row"><span class="field-name">سرعة التغيير <span class="badge req">مطلوب</span></span><span class="field-why">0.25 / 0.5 / 0.75 kg/week</span></div>
+      <div class="field-row"><span class="field-name">الموعد النهائي <span class="badge opt">اختياري</span></span><span class="field-why">back-calculate السرعة المطلوبة</span></div>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-head" style="background:#E1F5EE;color:#085041">Step 3 — النشاط</div>
+    <div class="step-body">
+      <div class="field-row"><span class="field-name">مستوى النشاط <span class="badge req">مطلوب</span></span><span class="field-why">الـ TDEE multiplier</span></div>
+      <div class="field-row"><span class="field-name">أيام التمرين/أسبوع <span class="badge req">مطلوب</span></span><span class="field-why">يحدد نوع الـ split</span></div>
+      <div class="field-row"><span class="field-name">المعدات <span class="badge req">مطلوب</span></span><span class="field-why">gym / home / لا شيء</span></div>
+      <div class="field-row"><span class="field-name">المستوى <span class="badge req">مطلوب</span></span><span class="field-why">beginner/inter/advanced</span></div>
+      <div class="field-row"><span class="field-name">إصابات/قيود <span class="badge opt">اختياري</span></span><span class="field-why">يستثني تمارين معينة</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="note">
+  <strong>لماذا Body Fat % اختياري؟</strong> — إذا المستخدم أعطاك الـ body fat، تقدر تستخدم <strong>Katch-McArdle</strong> وهي أدق من Mifflin بـ 3-5% لأنها تحسب على الـ Lean Mass فقط وتتجاهل الدهون. لكن معظم الناس ما يعرفون رقمهم، فـ Mifflin هو الـ fallback الآمن.
+</div>
+</div>

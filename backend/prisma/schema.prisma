@@ -1,0 +1,172 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum BodyMetricSource {
+  manual
+  smart_scale
+  import
+}
+
+model User {
+  id           String         @id @default(uuid()) @db.Uuid
+  email        String         @unique
+  passwordHash String
+  name         String
+  failedLogins Int            @default(0)
+  lockedUntil  DateTime?
+  deletedAt    DateTime?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  bodyMetrics  BodyMetric[]
+  goals        Goal[]
+  meals        NutritionLog[]
+  onboarding   OnboardingProfile?
+  sessions     Session[]
+  workouts     Workout[]
+}
+
+model OnboardingProfile {
+  id                  String    @id @default(uuid()) @db.Uuid
+  userId              String    @unique @db.Uuid
+  gender              String
+  age                 Int
+  heightCm            Decimal   @db.Decimal(6, 2)
+  currentWeightKg     Decimal   @db.Decimal(6, 2)
+  bodyFatPercent      Decimal?  @db.Decimal(5, 2)
+  goal                String
+  targetWeightKg      Decimal   @db.Decimal(6, 2)
+  weeklyChangeKg      Decimal   @db.Decimal(4, 2)
+  deadline            DateTime? @db.Date
+  activityLevel       String
+  workoutDaysPerWeek  Int
+  equipment           String
+  experienceLevel     String
+  limitations         String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Session {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  tokenHash String
+  ipAddress String?
+  userAgent String?
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Goal {
+  id             String    @id @default(uuid()) @db.Uuid
+  userId         String    @db.Uuid
+  targetWeight   Decimal?  @db.Decimal(6, 2)
+  targetCalories Int?
+  targetProtein  Int?
+  weeklyWorkouts Int?
+  deletedAt      DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Workout {
+  id        String     @id @default(uuid()) @db.Uuid
+  userId    String     @db.Uuid
+  date      DateTime   @db.Date
+  dayType   String
+  notes     String?
+  duration  Int?
+  deletedAt DateTime?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  exercises Exercise[]
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, date])
+}
+
+model Exercise {
+  id          String       @id @default(uuid()) @db.Uuid
+  workoutId   String       @db.Uuid
+  name        String
+  muscleGroup String
+  orderIndex  Int
+  sets        ExerciseSet[]
+  workout     Workout      @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+
+  @@index([workoutId])
+}
+
+model ExerciseSet {
+  id         String   @id @default(uuid()) @db.Uuid
+  exerciseId String   @db.Uuid
+  setNumber  Int
+  reps       Int
+  weight     Decimal  @db.Decimal(6, 2)
+  rpe        Int?
+  completed  Boolean  @default(false)
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@index([exerciseId])
+}
+
+model BodyMetric {
+  id        String           @id @default(uuid()) @db.Uuid
+  userId    String           @db.Uuid
+  date      DateTime         @db.Date
+  weight    Decimal?         @db.Decimal(6, 2)
+  bodyFat   Decimal?         @db.Decimal(5, 2)
+  waist     Decimal?         @db.Decimal(6, 2)
+  chest     Decimal?         @db.Decimal(6, 2)
+  source    BodyMetricSource @default(manual)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, date])
+}
+
+model NutritionLog {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  date      DateTime @db.Date
+  mealName  String
+  calories  Int
+  protein   Decimal  @db.Decimal(6, 2)
+  carbs     Decimal  @db.Decimal(6, 2)
+  fats      Decimal  @db.Decimal(6, 2)
+  waterMl   Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, date])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String?  @db.Uuid
+  action    String
+  entity    String
+  entityId  String?
+  metadata  Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([entity, entityId])
+}

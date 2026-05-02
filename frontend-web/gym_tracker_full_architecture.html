@@ -1,0 +1,573 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.section-title { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
+.tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 0.5px solid var(--color-border-tertiary); padding-bottom: 0; }
+.tab { font-size: 13px; padding: 7px 14px; border-radius: 6px 6px 0 0; cursor: pointer; color: var(--color-text-secondary); border: 0.5px solid transparent; background: transparent; transition: all .15s; user-select: none; position: relative; top: 1px; }
+.tab:hover { color: var(--color-text-primary); background: var(--color-background-secondary); }
+.tab.active { color: var(--color-text-primary); background: var(--color-background-primary); border-color: var(--color-border-tertiary); border-bottom-color: var(--color-background-primary); font-weight: 500; }
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* Architecture */
+.arch-layer { border: 0.5px solid var(--color-border-tertiary); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+.arch-layer-title { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 10px; letter-spacing:.06em; }
+.arch-boxes { display: flex; gap: 8px; flex-wrap: wrap; }
+.arch-box { flex: 1; min-width: 120px; border-radius: 8px; padding: 10px 12px; border: 0.5px solid var(--color-border-secondary); cursor: pointer; transition: all .15s; }
+.arch-box:hover { border-color: var(--color-border-primary); transform: translateY(-1px); }
+.arch-box .label { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+.arch-box .sublabel { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; }
+.arch-box.blue { background: #E6F1FB; border-color: #85B7EB; }
+.arch-box.blue .label { color: #0C447C; }
+.arch-box.blue .sublabel { color: #185FA5; }
+.arch-box.teal { background: #E1F5EE; border-color: #5DCAA5; }
+.arch-box.teal .label { color: #085041; }
+.arch-box.teal .sublabel { color: #0F6E56; }
+.arch-box.purple { background: #EEEDFE; border-color: #AFA9EC; }
+.arch-box.purple .label { color: #3C3489; }
+.arch-box.purple .sublabel { color: #534AB7; }
+.arch-box.amber { background: #FAEEDA; border-color: #EF9F27; }
+.arch-box.amber .label { color: #633806; }
+.arch-box.amber .sublabel { color: #854F0B; }
+.arch-box.coral { background: #FAECE7; border-color: #F0997B; }
+.arch-box.coral .label { color: #4A1B0C; }
+.arch-box.coral .sublabel { color: #993C1D; }
+.arch-box.green { background: #EAF3DE; border-color: #97C459; }
+.arch-box.green .label { color: #173404; }
+.arch-box.green .sublabel { color: #3B6D11; }
+.flow-arrow { text-align: center; color: var(--color-text-tertiary); font-size: 16px; margin: 2px 0; line-height: 1; }
+.detail-card { background: var(--color-background-secondary); border-radius: 8px; padding: 14px 16px; margin-top: 12px; border: 0.5px solid var(--color-border-tertiary); display: none; }
+.detail-card.show { display: block; }
+.detail-card h3 { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 8px; }
+.detail-items { display: flex; flex-wrap: wrap; gap: 6px; }
+.detail-item { font-size: 12px; background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: 5px; padding: 3px 8px; color: var(--color-text-secondary); }
+
+/* Schema */
+.schema-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+.schema-table { border: 0.5px solid var(--color-border-secondary); border-radius: 8px; overflow: hidden; }
+.schema-table-header { padding: 8px 12px; font-size: 13px; font-weight: 500; }
+.schema-table.users .schema-table-header { background: #E6F1FB; color: #0C447C; }
+.schema-table.goals .schema-table-header { background: #EEEDFE; color: #3C3489; }
+.schema-table.workouts .schema-table-header { background: #E1F5EE; color: #085041; }
+.schema-table.exercises .schema-table-header { background: #FAEEDA; color: #633806; }
+.schema-table.sets .schema-table-header { background: #FAECE7; color: #4A1B0C; }
+.schema-table.body .schema-table-header { background: #EAF3DE; color: #173404; }
+.schema-table.nutrition .schema-table-header { background: #FBEAF0; color: #4B1528; }
+.schema-table.sessions .schema-table-header { background: #F1EFE8; color: #2C2C2A; }
+.schema-field { display: flex; justify-content: space-between; align-items: center; padding: 5px 12px; border-top: 0.5px solid var(--color-border-tertiary); font-size: 12px; }
+.field-name { color: var(--color-text-primary); font-weight: 400; }
+.field-name.pk { color: #185FA5; font-weight: 500; }
+.field-name.fk { color: #854F0B; }
+.field-type { color: var(--color-text-secondary); font-family: var(--font-mono); font-size: 11px; }
+.field-tag { font-size: 10px; padding: 1px 5px; border-radius: 3px; margin-left: 4px; }
+.tag-pk { background: #E6F1FB; color: #185FA5; }
+.tag-fk { background: #FAEEDA; color: #854F0B; }
+.tag-new { background: #E1F5EE; color: #0F6E56; }
+
+/* Security */
+.sec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.sec-card { border: 0.5px solid var(--color-border-tertiary); border-radius: 8px; padding: 12px 14px; }
+.sec-card h3 { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.sec-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.dot-red { background: #E24B4A; }
+.dot-amber { background: #BA7517; }
+.dot-green { background: #639922; }
+.sec-item { font-size: 12px; color: var(--color-text-secondary); padding: 3px 0; border-bottom: 0.5px solid var(--color-border-tertiary); display: flex; gap: 6px; align-items: flex-start; }
+.sec-item:last-child { border-bottom: none; }
+.sec-item-icon { flex-shrink: 0; margin-top: 1px; }
+
+/* Mobile */
+.mobile-frame { width: 200px; height: 380px; border: 1.5px solid var(--color-border-secondary); border-radius: 28px; overflow: hidden; background: var(--color-background-secondary); margin: 0 auto; position: relative; }
+.mobile-notch { width: 60px; height: 18px; background: var(--color-background-primary); border-radius: 0 0 12px 12px; margin: 0 auto; position: absolute; top: 0; left: 50%; transform: translateX(-50%); }
+.mobile-content { padding: 28px 12px 12px; height: 100%; display: flex; flex-direction: column; gap: 8px; }
+.mobile-header { font-size: 12px; font-weight: 500; color: var(--color-text-primary); }
+.mobile-stat-row { display: flex; gap: 6px; }
+.mobile-stat { flex: 1; background: var(--color-background-primary); border-radius: 7px; padding: 7px 8px; border: 0.5px solid var(--color-border-tertiary); }
+.mobile-stat-label { font-size: 9px; color: var(--color-text-secondary); }
+.mobile-stat-val { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+.mobile-bar-wrap { background: var(--color-background-primary); border-radius: 7px; padding: 8px 10px; border: 0.5px solid var(--color-border-tertiary); }
+.mobile-bar-label { font-size: 10px; color: var(--color-text-secondary); margin-bottom: 5px; }
+.mobile-bar { height: 5px; background: var(--color-background-secondary); border-radius: 3px; overflow: hidden; }
+.mobile-bar-fill { height: 100%; border-radius: 3px; }
+.mobile-btn { width: 100%; background: #185FA5; color: #fff; border: none; border-radius: 8px; padding: 8px; font-size: 11px; font-weight: 500; cursor: pointer; margin-top: auto; }
+.pwa-badges { display: flex; gap: 8px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
+.pwa-badge { font-size: 12px; padding: 5px 12px; border-radius: 6px; border: 0.5px solid var(--color-border-secondary); color: var(--color-text-secondary); background: var(--color-background-secondary); }
+
+/* Roadmap */
+.timeline { position: relative; padding-left: 24px; }
+.timeline::before { content: ''; position: absolute; left: 8px; top: 8px; bottom: 8px; width: 0.5px; background: var(--color-border-secondary); }
+.tl-item { position: relative; margin-bottom: 16px; }
+.tl-dot { position: absolute; left: -20px; top: 4px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--color-background-primary); }
+.tl-dot.done { background: #639922; }
+.tl-dot.active { background: #185FA5; }
+.tl-dot.future { background: var(--color-border-secondary); }
+.tl-week { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 3px; }
+.tl-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+.tl-tasks { display: flex; flex-wrap: wrap; gap: 4px; }
+.tl-task { font-size: 11px; padding: 2px 7px; border-radius: 4px; background: var(--color-background-secondary); color: var(--color-text-secondary); border: 0.5px solid var(--color-border-tertiary); }
+</style>
+
+<div style="padding: 16px 0 0;">
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('arch')">Architecture</div>
+  <div class="tab" onclick="switchTab('schema')">Database Schema</div>
+  <div class="tab" onclick="switchTab('security')">Security</div>
+  <div class="tab" onclick="switchTab('mobile')">Mobile (PWA)</div>
+  <div class="tab" onclick="switchTab('roadmap')">Roadmap</div>
+</div>
+
+<!-- ARCH -->
+<div class="panel active" id="tab-arch">
+  <div class="arch-layer">
+    <div class="arch-layer-title">Client Layer</div>
+    <div class="arch-boxes">
+      <div class="arch-box blue" onclick="showDetail('nextjs')">
+        <div class="label">Next.js 14</div>
+        <div class="sublabel">App Router + RSC</div>
+      </div>
+      <div class="arch-box purple" onclick="showDetail('charts')">
+        <div class="label">Recharts</div>
+        <div class="sublabel">Progress charts</div>
+      </div>
+      <div class="arch-box teal" onclick="showDetail('pwa')">
+        <div class="label">PWA</div>
+        <div class="sublabel">Offline + install</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="arch-layer">
+    <div class="arch-layer-title">API Layer</div>
+    <div class="arch-boxes">
+      <div class="arch-box blue" onclick="showDetail('routes')">
+        <div class="label">Next.js API Routes</div>
+        <div class="sublabel">/api/* endpoints</div>
+      </div>
+      <div class="arch-box coral" onclick="showDetail('auth')">
+        <div class="label">NextAuth.js</div>
+        <div class="sublabel">JWT + sessions</div>
+      </div>
+      <div class="arch-box amber" onclick="showDetail('validation')">
+        <div class="label">Zod</div>
+        <div class="sublabel">Input validation</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="arch-layer">
+    <div class="arch-layer-title">Data Layer</div>
+    <div class="arch-boxes">
+      <div class="arch-box teal" onclick="showDetail('prisma')">
+        <div class="label">Prisma ORM</div>
+        <div class="sublabel">Type-safe queries</div>
+      </div>
+      <div class="arch-box blue" onclick="showDetail('postgres')">
+        <div class="label">PostgreSQL</div>
+        <div class="sublabel">Supabase hosted</div>
+      </div>
+      <div class="arch-box green" onclick="showDetail('rls')">
+        <div class="label">RLS Policies</div>
+        <div class="sublabel">Row-level security</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="arch-layer">
+    <div class="arch-layer-title">Hosting & Infrastructure</div>
+    <div class="arch-boxes">
+      <div class="arch-box blue" onclick="showDetail('vercel')">
+        <div class="label">Vercel</div>
+        <div class="sublabel">Frontend + API</div>
+      </div>
+      <div class="arch-box teal" onclick="showDetail('supabase')">
+        <div class="label">Supabase</div>
+        <div class="sublabel">DB + Storage</div>
+      </div>
+      <div class="arch-box purple" onclick="showDetail('monitoring')">
+        <div class="label">Sentry</div>
+        <div class="sublabel">Error tracking</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="detail-card" class="detail-card"></div>
+</div>
+
+<!-- SCHEMA -->
+<div class="panel" id="tab-schema">
+  <div class="schema-grid">
+
+    <div class="schema-table users">
+      <div class="schema-table-header">Users</div>
+      <div class="schema-field"><span class="field-name pk">id <span class="field-tag tag-pk">PK</span></span><span class="field-type">uuid</span></div>
+      <div class="schema-field"><span class="field-name">email</span><span class="field-type">varchar unique</span></div>
+      <div class="schema-field"><span class="field-name">passwordHash</span><span class="field-type">text</span></div>
+      <div class="schema-field"><span class="field-name">name</span><span class="field-type">varchar</span></div>
+      <div class="schema-field"><span class="field-name" style="color:#639922">failedLogins <span class="field-tag tag-new">NEW</span></span><span class="field-type">int</span></div>
+      <div class="schema-field"><span class="field-name" style="color:#639922">lockedUntil <span class="field-tag tag-new">NEW</span></span><span class="field-type">timestamp</span></div>
+      <div class="schema-field"><span class="field-name" style="color:#639922">deletedAt <span class="field-tag tag-new">NEW</span></span><span class="field-type">timestamp</span></div>
+    </div>
+
+    <div class="schema-table sessions">
+      <div class="schema-table-header">Sessions <span class="field-tag tag-new" style="float:right">NEW</span></div>
+      <div class="schema-field"><span class="field-name pk">id <span class="field-tag tag-pk">PK</span></span><span class="field-type">uuid</span></div>
+      <div class="schema-field"><span class="field-name fk">userId <span class="field-tag tag-fk">FK</span></span><span class="field-type">uuid</span></div>
+      <div class="schema-field"><span class="field-name">tokenHash</span><span class="field-type">text</span></div>
+      <div class="schema-field"><span class="field-name">ipAddress</span><span class="field-type">inet</span></div>
+      <div class="schema-field"><span class="field-name">userAgent</span><span class="field-type">text</span></div>
+      <div class="schema-field"><span class="field-name">expiresAt</span><span class="field-type">timestamp</span></div>
+      <div class="schema-field"><span class="field-name">revokedAt</span><span class="field-type">timestamp</span></div>
+    </div>
+
+    <div class="schema-table goals">
+      <div class="schema-table-header">Goals</div>
+      <div class="schema-field"><span class="field-name pk">id <span class="field-tag tag-pk">PK</span></span><span class="field-type">uuid</span></div>
+      <div class="schema-field"><span class="field-name fk">userId <span class="field-tag tag-fk">FK</span></span><span class="field-type">uuid</span></div>
+      <div class="schema-field"><span class="field-name">targetWeight</span><span class="field-type">decimal</span></div>
+      <div class="schema-field"><span class="field-name">targetCalories</span><span class="field-type">int</span></div>
+      <div class="schema-field"><span class="field-name">targetProtein</span><span class="field-type">int</span></div>
+      <div class="schema-field"><span class="field-name">weeklyWorkouts</span><span class="field-type">int</span></div>
+      <div class="schema-field"><span class="field-name" style="color:#639922">deletedAt <span class="field-tag tag-new">NEW</span></span><span class="field-type">timestamp</span></div>
+    </div>
+
+    <div class="schema-table workouts">
+      <div class="schema-table-header">Workouts</div>
+      <div class="schema-field"><span class="field-name pk">id <span class="field-tag tag-pk">PK</span></span><span class="field-type">uuid</span></div>
+      <div class="schema-field"><span class="field-name fk">userId <span class="field-tag tag-fk">FK</span></span><span class="field-type">uuid</span></div>
+      <div class="schema-field"><span class="field-name">date</span><span class="field-type">date</span></div>
+      <div class="schema-field"><span class="field-name">dayType</span><span class="field-type">varchar</span></div>
+      <div class="schema-field"><span class="field-name">notes</span><span class="field-type">text</span></div>
+      <div class="schema-field"><span class="field-name">duration</span><span class="field-type">int</span></div>
+      <div class="schema-field"><span class="field-name" style="color:#639922">deletedAt <span class="field-tag tag-new">NEW</span></span><span class="field-type">timestamp</span></div>
+    </div>
+
+    <div class="schema-table exercises">
+      <div class="schema-table-header">Exercises</div>
+      <div class="schema-field"><span class="field-name pk">id <span class="field-tag tag-pk">PK</span></span><span class="field-type">uuid</span></div>
+      <div class="schema-field"><span class="field-name fk">workoutId <span class="field-tag tag-fk">FK</span></span><span class="field-type">uuid</span></div>
+      <div class="schema-field"><span class="field-name">name</span><span class="field-type">varchar</span></div>
+      <div class="schema-field"><span class="field-name">muscleGroup</span><span class="field-type">varchar</span></div>
+      <div class="schema-field"><span class="field-name">orderIndex</span><span class="field-type">int</span></div>
+    </div>
+
+    <div class="schema-table sets">
+      <div class="schema-table-header">Sets</div>
+      <div class="schema-field"><span class="field-name pk">id <span class="field-tag tag-pk">PK</span></span><span class="field-type">uuid</span></div>
+      <div class="schema-field"><span class="field-name fk">exerciseId <span class="field-tag tag-fk">FK</span></span><span class="field-type">uuid</span></div>
+      <div class="schema-field"><span class="field-name">setNumber</span><span class="field-type">int</span></div>
+      <div class="schema-field"><span class="field-name">reps</span><span class="field-type">int</span></div>
+      <div class="schema-field"><span class="field-name">weight</span><span class="field-type">decimal</span></div>
+      <div class="schema-field"><span class="field-name">rpe</span><span class="field-type">int 1-10</span></div>
+    </div>
+
+    <div class="schema-table body">
+      <div class="schema-table-header">BodyMetrics</div>
+      <div class="schema-field"><span class="field-name pk">id <span class="field-tag tag-pk">PK</span></span><span class="field-type">uuid</span></div>
+      <div class="schema-field"><span class="field-name fk">userId <span class="field-tag tag-fk">FK</span></span><span class="field-type">uuid</span></div>
+      <div class="schema-field"><span class="field-name">date</span><span class="field-type">date</span></div>
+      <div class="schema-field"><span class="field-name">weight</span><span class="field-type">decimal</span></div>
+      <div class="schema-field"><span class="field-name">bodyFat</span><span class="field-type">decimal</span></div>
+      <div class="schema-field"><span class="field-name">waist / chest</span><span class="field-type">decimal</span></div>
+      <div class="schema-field"><span class="field-name" style="color:#639922">source <span class="field-tag tag-new">NEW</span></span><span class="field-type">enum</span></div>
+    </div>
+
+    <div class="schema-table nutrition">
+      <div class="schema-table-header">NutritionLogs</div>
+      <div class="schema-field"><span class="field-name pk">id <span class="field-tag tag-pk">PK</span></span><span class="field-type">uuid</span></div>
+      <div class="schema-field"><span class="field-name fk">userId <span class="field-tag tag-fk">FK</span></span><span class="field-type">uuid</span></div>
+      <div class="schema-field"><span class="field-name">date</span><span class="field-type">date</span></div>
+      <div class="schema-field"><span class="field-name">calories</span><span class="field-type">int</span></div>
+      <div class="schema-field"><span class="field-name">protein / carbs</span><span class="field-type">decimal</span></div>
+      <div class="schema-field"><span class="field-name">fats / water</span><span class="field-type">decimal</span></div>
+    </div>
+
+  </div>
+
+  <div style="margin-top:12px; padding:10px 12px; background:var(--color-background-secondary); border-radius:8px; font-size:12px; color:var(--color-text-secondary);">
+    <span style="color:#639922; font-weight:500;">NEW</span> = حقول مضافة للتحسين الأمني | 
+    <span style="color:#185FA5; font-weight:500;">PK</span> = Primary Key | 
+    <span style="color:#854F0B; font-weight:500;">FK</span> = Foreign Key
+  </div>
+</div>
+
+<!-- SECURITY -->
+<div class="panel" id="tab-security">
+  <div class="sec-grid">
+
+    <div class="sec-card">
+      <h3><span class="sec-dot dot-red"></span>عاجل — أسبوع 1</h3>
+      <div class="sec-item"><span class="sec-item-icon">→</span>Sessions table كاملة مع tokenHash</div>
+      <div class="sec-item"><span class="sec-item-icon">→</span>bcrypt cost factor 12+ لكلمة المرور</div>
+      <div class="sec-item"><span class="sec-item-icon">→</span>HTTP-only cookies للـ JWT</div>
+      <div class="sec-item"><span class="sec-item-icon">→</span>Rate limiting على /api/auth/*</div>
+      <div class="sec-item"><span class="sec-item-icon">→</span>تفعيل RLS في Supabase</div>
+    </div>
+
+    <div class="sec-card">
+      <h3><span class="sec-dot dot-amber"></span>مهم — أسبوع 2-3</h3>
+      <div class="sec-item"><span class="sec-item-icon">→</span>Soft delete (deletedAt) لكل الجداول</div>
+      <div class="sec-item"><span class="sec-item-icon">→</span>Zod validation على كل endpoint</div>
+      <div class="sec-item"><span class="sec-item-icon">→</span>CSRF protection via SameSite</div>
+      <div class="sec-item"><span class="sec-item-icon">→</span>userId + date indexes</div>
+      <div class="sec-item"><span class="sec-item-icon">→</span>Audit log table</div>
+    </div>
+
+    <div class="sec-card">
+      <h3><span class="sec-dot dot-green"></span>مستقبلي — Phase 2</h3>
+      <div class="sec-item"><span class="sec-item-icon">→</span>2FA / TOTP</div>
+      <div class="sec-item"><span class="sec-item-icon">→</span>Field encryption للـ body metrics</div>
+      <div class="sec-item"><span class="sec-item-icon">→</span>OAuth (Google / Apple)</div>
+      <div class="sec-item"><span class="sec-item-icon">→</span>GDPR data export & deletion</div>
+    </div>
+
+    <div class="sec-card">
+      <h3><span class="sec-dot" style="background:#185FA5"></span>RLS Example</h3>
+      <div style="background:var(--color-background-secondary);border-radius:6px;padding:10px;font-family:var(--font-mono);font-size:11px;color:var(--color-text-secondary);line-height:1.7;margin-top:4px;">
+        <span style="color:#185FA5">ALTER TABLE</span> workouts<br>
+        <span style="color:#185FA5">ENABLE ROW LEVEL SECURITY</span>;<br><br>
+        <span style="color:#185FA5">CREATE POLICY</span> user_isolation<br>
+        &nbsp;<span style="color:#185FA5">ON</span> workouts <span style="color:#185FA5">USING</span><br>
+        &nbsp;(auth.uid() = userId);
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MOBILE -->
+<div class="panel" id="tab-mobile">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start">
+    <div>
+      <div class="section-title" style="margin-bottom:10px">معاينة PWA</div>
+      <div class="mobile-frame">
+        <div class="mobile-notch"></div>
+        <div class="mobile-content">
+          <div class="mobile-header">Today's Summary</div>
+          <div class="mobile-stat-row">
+            <div class="mobile-stat">
+              <div class="mobile-stat-label">Calories</div>
+              <div class="mobile-stat-val" style="color:#185FA5">1840</div>
+            </div>
+            <div class="mobile-stat">
+              <div class="mobile-stat-label">Protein</div>
+              <div class="mobile-stat-val" style="color:#639922">142g</div>
+            </div>
+          </div>
+          <div class="mobile-bar-wrap">
+            <div class="mobile-bar-label">Calorie goal</div>
+            <div class="mobile-bar"><div class="mobile-bar-fill" style="width:76%;background:#185FA5"></div></div>
+          </div>
+          <div class="mobile-bar-wrap">
+            <div class="mobile-bar-label">Protein goal</div>
+            <div class="mobile-bar"><div class="mobile-bar-fill" style="width:89%;background:#639922"></div></div>
+          </div>
+          <div class="mobile-stat-row">
+            <div class="mobile-stat">
+              <div class="mobile-stat-label">Workouts</div>
+              <div class="mobile-stat-val">3/4</div>
+            </div>
+            <div class="mobile-stat">
+              <div class="mobile-stat-label">Weight</div>
+              <div class="mobile-stat-val">84.2</div>
+            </div>
+          </div>
+          <button class="mobile-btn">+ Log Workout</button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-title" style="margin-bottom:10px">خطوات تفعيل PWA</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot done"></div>
+          <div class="tl-week">الخطوة 1</div>
+          <div class="tl-title">Web App Manifest</div>
+          <div class="tl-tasks">
+            <span class="tl-task">manifest.json</span>
+            <span class="tl-task">icons 192/512px</span>
+            <span class="tl-task">theme_color</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot active"></div>
+          <div class="tl-week">الخطوة 2</div>
+          <div class="tl-title">Service Worker</div>
+          <div class="tl-tasks">
+            <span class="tl-task">next-pwa package</span>
+            <span class="tl-task">cache strategy</span>
+            <span class="tl-task">offline page</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot future"></div>
+          <div class="tl-week">الخطوة 3</div>
+          <div class="tl-title">Offline Data Sync</div>
+          <div class="tl-tasks">
+            <span class="tl-task">IndexedDB</span>
+            <span class="tl-task">background sync</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot future"></div>
+          <div class="tl-week">Phase 2</div>
+          <div class="tl-title">React Native (Expo)</div>
+          <div class="tl-tasks">
+            <span class="tl-task">shared API</span>
+            <span class="tl-task">native notifications</span>
+            <span class="tl-task">App Store</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;padding:10px 12px;background:var(--color-background-info,#E6F1FB);border-radius:8px;font-size:12px;color:#185FA5;border:0.5px solid #B5D4F4">
+        PWA = 0 تطوير إضافي الآن. نفس الكود، نفس الـ deployment. المستخدم يضغط "Add to Home Screen" وبس.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ROADMAP -->
+<div class="panel" id="tab-roadmap">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+    <div>
+      <div class="section-title">Phase 1 — MVP (4 أسابيع)</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot active"></div>
+          <div class="tl-week">Week 1</div>
+          <div class="tl-title">Foundation</div>
+          <div class="tl-tasks">
+            <span class="tl-task">Next.js setup</span>
+            <span class="tl-task">Prisma + DB</span>
+            <span class="tl-task">NextAuth</span>
+            <span class="tl-task">Sessions table</span>
+            <span class="tl-task">RLS</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot future"></div>
+          <div class="tl-week">Week 2</div>
+          <div class="tl-title">Core Tracking</div>
+          <div class="tl-tasks">
+            <span class="tl-task">Workout CRUD</span>
+            <span class="tl-task">Body metrics</span>
+            <span class="tl-task">Goals API</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot future"></div>
+          <div class="tl-week">Week 3</div>
+          <div class="tl-title">Nutrition + Dashboard</div>
+          <div class="tl-tasks">
+            <span class="tl-task">Nutrition logs</span>
+            <span class="tl-task">Recharts</span>
+            <span class="tl-task">Summary page</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot future"></div>
+          <div class="tl-week">Week 4</div>
+          <div class="tl-title">Polish + PWA</div>
+          <div class="tl-tasks">
+            <span class="tl-task">Mobile UI</span>
+            <span class="tl-task">PWA manifest</span>
+            <span class="tl-task">Testing</span>
+            <span class="tl-task">Deploy</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="section-title">Phase 2 — Growth (شهر 2-3)</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot future"></div>
+          <div class="tl-week">Month 2</div>
+          <div class="tl-title">Smart Features</div>
+          <div class="tl-tasks">
+            <span class="tl-task">AI recommendations</span>
+            <span class="tl-task">Progress photos</span>
+            <span class="tl-task">Workout templates</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot future"></div>
+          <div class="tl-week">Month 3</div>
+          <div class="tl-title">Social + Mobile</div>
+          <div class="tl-tasks">
+            <span class="tl-task">React Native</span>
+            <span class="tl-task">Push notifications</span>
+            <span class="tl-task">Friends/sharing</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot future"></div>
+          <div class="tl-week">Phase 3</div>
+          <div class="tl-title">Monetization</div>
+          <div class="tl-tasks">
+            <span class="tl-task">Subscriptions</span>
+            <span class="tl-task">Coach mode</span>
+            <span class="tl-task">API access</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px">
+        <div class="section-title">Tech Stack Summary</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:6px">
+          <span style="font-size:11px;padding:4px 9px;border-radius:5px;background:#E6F1FB;color:#185FA5;border:0.5px solid #B5D4F4">Next.js 14</span>
+          <span style="font-size:11px;padding:4px 9px;border-radius:5px;background:#EEEDFE;color:#3C3489;border:0.5px solid #AFA9EC">NextAuth.js</span>
+          <span style="font-size:11px;padding:4px 9px;border-radius:5px;background:#E1F5EE;color:#085041;border:0.5px solid #5DCAA5">Prisma</span>
+          <span style="font-size:11px;padding:4px 9px;border-radius:5px;background:#EAF3DE;color:#173404;border:0.5px solid #97C459">PostgreSQL</span>
+          <span style="font-size:11px;padding:4px 9px;border-radius:5px;background:#FAEEDA;color:#633806;border:0.5px solid #EF9F27">Zod</span>
+          <span style="font-size:11px;padding:4px 9px;border-radius:5px;background:#FAECE7;color:#4A1B0C;border:0.5px solid #F0997B">Recharts</span>
+          <span style="font-size:11px;padding:4px 9px;border-radius:5px;background:#E6F1FB;color:#0C447C;border:0.5px solid #85B7EB">Vercel</span>
+          <span style="font-size:11px;padding:4px 9px;border-radius:5px;background:#E1F5EE;color:#0F6E56;border:0.5px solid #9FE1CB">Supabase</span>
+          <span style="font-size:11px;padding:4px 9px;border-radius:5px;background:#F1EFE8;color:#2C2C2A;border:0.5px solid #D3D1C7">Sentry</span>
+          <span style="font-size:11px;padding:4px 9px;border-radius:5px;background:#FBEAF0;color:#4B1528;border:0.5px solid #ED93B1">next-pwa</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const details = {
+  nextjs: { title: 'Next.js 14 — App Router', items: ['Server Components (RSC)', 'Streaming UI', 'Image optimization', 'Built-in caching', 'TypeScript first'] },
+  charts: { title: 'Recharts — Progress Charts', items: ['Weight progress line', 'Calories bar chart', 'Muscle group radar', 'Weekly volume trend', 'Body measurements'] },
+  pwa: { title: 'PWA — Progressive Web App', items: ['Installable on home screen', 'Offline workout logging', 'Push notifications', 'next-pwa package', 'No app store needed'] },
+  routes: { title: 'Next.js API Routes', items: ['/api/auth/*', '/api/workouts/*', '/api/nutrition/*', '/api/body-metrics/*', '/api/goals/*'] },
+  auth: { title: 'NextAuth.js — Authentication', items: ['JWT tokens', 'HTTP-only cookies', 'Session management', 'Credential provider', 'Google OAuth ready'] },
+  validation: { title: 'Zod — Input Validation', items: ['Schema validation', 'Type inference', 'Custom error messages', 'API request validation', 'Form validation'] },
+  prisma: { title: 'Prisma ORM', items: ['Type-safe queries', 'Auto migrations', 'Prisma Studio UI', 'Relation handling', 'Connection pooling'] },
+  postgres: { title: 'PostgreSQL — Database', items: ['UUID primary keys', 'Indexed on userId+date', 'JSONB for metadata', 'Full-text search', 'Supabase hosted in KSA'] },
+  rls: { title: 'Row-Level Security', items: ['Per-user data isolation', 'Policy on every table', 'auth.uid() matching', 'Prevents data leaks', 'Supabase built-in'] },
+  vercel: { title: 'Vercel — Hosting', items: ['Edge functions', 'Automatic HTTPS', 'Preview deployments', 'Analytics built-in', 'GitHub CI/CD'] },
+  supabase: { title: 'Supabase', items: ['PostgreSQL managed', 'Storage for photos', 'Realtime subscriptions', 'Admin dashboard', 'Backup & restore'] },
+  monitoring: { title: 'Sentry — Monitoring', items: ['Error tracking', 'Performance monitoring', 'User session replay', 'Alert notifications', 'Source maps'] },
+};
+
+function showDetail(key) {
+  const d = details[key];
+  const el = document.getElementById('detail-card');
+  el.innerHTML = `<h3>${d.title}</h3><div class="detail-items">${d.items.map(i=>`<span class="detail-item">${i}</span>`).join('')}</div>`;
+  el.classList.add('show');
+}
+
+function switchTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`[onclick="switchTab('${id}')"]`).classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+}
+</script>
