@@ -1,8 +1,8 @@
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
-import { login, OnboardingInput, register } from "../src/api/client";
-import { setSession } from "../src/state/session";
+import { getMe, login, OnboardingInput, register } from "../src/api/client";
+import { loadStoredSession, setSession } from "../src/state/session";
 import { colors, radius, spacing } from "../src/theme";
 
 type Mode = "login" | "register";
@@ -27,11 +27,30 @@ const defaultOnboarding: OnboardingInput = {
 export default function AuthScreen() {
   const [mode, setMode] = useState<Mode>("login");
   const [loading, setLoading] = useState(false);
+  const [checkingSession, setCheckingSession] = useState(true);
   const [error, setError] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [onboarding, setOnboarding] = useState(defaultOnboarding);
+
+  useEffect(() => {
+    async function restoreSession() {
+      try {
+        const stored = await loadStoredSession();
+        if (stored) {
+          await getMe();
+          router.replace("/(tabs)");
+        }
+      } catch {
+        // Invalid or expired stored sessions stay on the auth screen.
+      } finally {
+        setCheckingSession(false);
+      }
+    }
+
+    restoreSession();
+  }, []);
 
   async function submit() {
     try {
@@ -46,7 +65,7 @@ export default function AuthScreen() {
               password,
               onboarding
             });
-      setSession(result);
+      await setSession(result);
       router.replace("/(tabs)");
     } catch (err) {
       setError(err instanceof Error ? err.message : "حدث خطأ غير متوقع");
@@ -58,6 +77,7 @@ export default function AuthScreen() {
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
       <Text style={styles.brand}>Gym Tracker</Text>
+      {checkingSession ? <ActivityIndicator color={colors.green} style={styles.checking} /> : null}
       <Text style={styles.title}>{mode === "login" ? "تسجيل الدخول" : "إنشاء حساب"}</Text>
       <Text style={styles.subtitle}>ابدأ بحسابك الحقيقي، والبيانات تحفظ في Railway PostgreSQL.</Text>
 
@@ -139,6 +159,7 @@ function Segment({ label, value, options, onChange }: { label: string; value: st
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background },
   content: { padding: spacing.lg, paddingBottom: 70 },
+  checking: { marginTop: spacing.md },
   brand: { color: colors.green, fontSize: 15, fontWeight: "900", marginTop: 30, textAlign: "right" },
   title: { color: colors.text, fontSize: 36, fontWeight: "900", marginTop: spacing.sm, textAlign: "right" },
   subtitle: { color: colors.muted, fontSize: 14, lineHeight: 22, marginBottom: spacing.lg, marginTop: spacing.xs, textAlign: "right" },

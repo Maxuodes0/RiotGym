@@ -12,20 +12,20 @@
     "prisma:studio": "prisma studio"
   },
   "dependencies": {
-    "@prisma/client": "latest",
+    "@prisma/client": "^6.19.0",
     "bcryptjs": "latest",
     "cors": "latest",
     "dotenv": "latest",
     "express": "latest",
+    "express-rate-limit": "latest",
     "helmet": "latest",
     "zod": "latest"
   },
   "devDependencies": {
-    "@types/bcryptjs": "latest",
     "@types/cors": "latest",
     "@types/express": "latest",
     "@types/node": "latest",
-    "prisma": "latest",
+    "prisma": "^6.19.0",
     "tsx": "latest",
     "typescript": "latest"
   }

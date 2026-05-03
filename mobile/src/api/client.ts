@@ -1,4 +1,4 @@
-import { getSessionUserId } from "../state/session";
+import { clearSession, getAuthToken } from "../state/session";
 
 export const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:4000";
 
@@ -31,30 +31,46 @@ export type AuthResponse = {
 export async function login(email: string, password: string) {
   return request<AuthResponse>("/api/auth/login", {
     method: "POST",
-    body: JSON.stringify({ email, password })
+    body: JSON.stringify({ email, password }),
+    auth: false
   });
 }
 
 export async function register(payload: { name: string; email: string; password: string; onboarding: OnboardingInput }) {
   return request<AuthResponse>("/api/auth/register", {
     method: "POST",
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
+    auth: false
   });
 }
 
-export async function getDashboardSummary() {
-  const userId = getSessionUserId();
-  if (!userId) throw new Error("سجل الدخول أولًا");
-  return request<DashboardSummary>(`/api/dashboard/summary?userId=${encodeURIComponent(userId)}`);
+export async function getMe() {
+  return request<{ user: AuthResponse["user"] }>("/api/auth/me");
 }
 
-async function request<T>(path: string, init: RequestInit = {}) {
+export async function logout() {
+  await request<{ ok: true }>("/api/auth/logout", { method: "POST" });
+  await clearSession();
+}
+
+export async function getDashboardSummary() {
+  return request<DashboardSummary>("/api/dashboard/summary");
+}
+
+async function request<T>(path: string, init: ApiRequestInit = {}) {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    ...(init.headers as Record<string, string> | undefined)
+  };
+
+  if (init.auth !== false) {
+    const token = getAuthToken();
+    if (token) headers.Authorization = `Bearer ${token}`;
+  }
+
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...init.headers
-    }
+    headers
   });
   const data = await response.json().catch(() => null);
   if (!response.ok) {
@@ -62,6 +78,10 @@ async function request<T>(path: string, init: RequestInit = {}) {
   }
   return data as T;
 }
+
+type ApiRequestInit = RequestInit & {
+  auth?: boolean;
+};
 
 export type DashboardSummary = {
   calories: { value: number; target: number | null };

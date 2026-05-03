@@ -16,6 +16,7 @@
     "expo-constants": "latest",
     "expo-linear-gradient": "latest",
     "expo-router": "latest",
+    "expo-secure-store": "latest",
     "expo-status-bar": "latest",
     "react": "19.2.0",
     "react-native": "0.83.6",
