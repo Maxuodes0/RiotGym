@@ -80,7 +80,9 @@ CREATE TABLE IF NOT EXISTS "Exercise" (
   "workoutId" uuid NOT NULL REFERENCES "Workout"("id") ON DELETE CASCADE,
   "name" text NOT NULL,
   "muscleGroup" text NOT NULL,
-  "orderIndex" integer NOT NULL
+  "orderIndex" integer NOT NULL,
+  "createdAt" timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS "ExerciseSet" (
@@ -90,7 +92,9 @@ CREATE TABLE IF NOT EXISTS "ExerciseSet" (
   "reps" integer NOT NULL,
   "weight" numeric(6,2) NOT NULL,
   "rpe" integer,
-  "completed" boolean NOT NULL DEFAULT false
+  "completed" boolean NOT NULL DEFAULT false,
+  "createdAt" timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS "BodyMetric" (
@@ -141,3 +145,46 @@ CREATE INDEX IF NOT EXISTS "BodyMetric_userId_date_idx" ON "BodyMetric"("userId"
 CREATE INDEX IF NOT EXISTS "NutritionLog_userId_date_idx" ON "NutritionLog"("userId", "date");
 CREATE INDEX IF NOT EXISTS "AuditLog_userId_idx" ON "AuditLog"("userId");
 CREATE INDEX IF NOT EXISTS "AuditLog_entity_entityId_idx" ON "AuditLog"("entity", "entityId");
+
+ALTER TABLE "Exercise" ADD COLUMN IF NOT EXISTS "createdAt" timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE "Exercise" ADD COLUMN IF NOT EXISTS "updatedAt" timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE "ExerciseSet" ADD COLUMN IF NOT EXISTS "createdAt" timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE "ExerciseSet" ADD COLUMN IF NOT EXISTS "updatedAt" timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'BodyMetric_userId_date_unique'
+  ) THEN
+    ALTER TABLE "BodyMetric"
+      ADD CONSTRAINT "BodyMetric_userId_date_unique" UNIQUE ("userId", "date");
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'ExerciseSet_reps_positive_check'
+  ) THEN
+    ALTER TABLE "ExerciseSet"
+      ADD CONSTRAINT "ExerciseSet_reps_positive_check" CHECK ("reps" > 0);
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'ExerciseSet_weight_nonnegative_check'
+  ) THEN
+    ALTER TABLE "ExerciseSet"
+      ADD CONSTRAINT "ExerciseSet_weight_nonnegative_check" CHECK ("weight" >= 0);
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'ExerciseSet_rpe_range_check'
+  ) THEN
+    ALTER TABLE "ExerciseSet"
+      ADD CONSTRAINT "ExerciseSet_rpe_range_check" CHECK ("rpe" IS NULL OR "rpe" BETWEEN 1 AND 10);
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'Workout_date_reasonable_check'
+  ) THEN
+    ALTER TABLE "Workout"
+      ADD CONSTRAINT "Workout_date_reasonable_check" CHECK ("date" <= CURRENT_DATE + INTERVAL '1 day');
+  END IF;
+END $$;

@@ -105,6 +105,8 @@ model Exercise {
   name        String
   muscleGroup String
   orderIndex  Int
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   sets        ExerciseSet[]
   workout     Workout      @relation(fields: [workoutId], references: [id], onDelete: Cascade)
 
@@ -119,6 +121,8 @@ model ExerciseSet {
   weight     Decimal  @db.Decimal(6, 2)
   rpe        Int?
   completed  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
   exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
 
   @@index([exerciseId])
@@ -138,6 +142,7 @@ model BodyMetric {
   user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, date])
+  @@unique([userId, date])
 }
 
 model NutritionLog {

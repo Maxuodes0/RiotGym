@@ -166,6 +166,8 @@ Important fields:
 - `name`
 - `muscleGroup`
 - `orderIndex`
+- `createdAt`
+- `updatedAt`
 
 Relations:
 
@@ -187,6 +189,14 @@ Important fields:
 - `weight`
 - `rpe`
 - `completed`
+- `createdAt`
+- `updatedAt`
+
+Constraints:
+
+- `reps > 0`
+- `weight >= 0`
+- `rpe IS NULL OR rpe BETWEEN 1 AND 10`
 
 Index:
 
@@ -215,6 +225,14 @@ Important fields:
 Index:
 
 - `(userId, date)`
+
+Unique:
+
+- `(userId, date)` to keep one body metric entry per user per day.
+
+API behavior:
+
+- `POST /api/body-metrics` uses upsert, so submitting a metric for the same date updates the existing row.
 
 ### `NutritionLog`
 

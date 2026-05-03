@@ -20,14 +20,28 @@ bodyMetricsRouter.use(requireAuth);
 bodyMetricsRouter.post("/", async (req, res, next) => {
   try {
     const input = bodyMetricSchema.parse(req.body);
-    const metric = await prisma.bodyMetric.create({
-      data: {
+    const date = input.date ?? todayDate();
+    const metric = await prisma.bodyMetric.upsert({
+      where: {
+        userId_date: {
+          userId: req.userId!,
+          date
+        }
+      },
+      create: {
         ...input,
-        date: input.date ?? todayDate(),
+        date,
         userId: req.userId!
+      },
+      update: {
+        weight: input.weight,
+        bodyFat: input.bodyFat,
+        waist: input.waist,
+        chest: input.chest,
+        source: input.source
       }
     });
-    res.status(201).json(metric);
+    res.status(200).json(metric);
   } catch (error) {
     next(error);
   }
