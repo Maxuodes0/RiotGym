@@ -11,6 +11,7 @@ Gym Tracker Mobile/
 ├── Backend_structre.md
 ├── Project_structure.md
 ├── Db_details.md
+├── Theme_guide.md
 └── onboarding_data_map.html
 ```
 
@@ -19,6 +20,18 @@ Gym Tracker Mobile/
 ### `README.md`
 
 High-level project notes and basic run commands.
+
+### `Theme_guide.md`
+
+Approved visual theme for the mobile and web UI.
+
+Use it as the source of truth for:
+
+- Font
+- Main colors
+- Brand accent
+- Card radius
+- UI style direction
 
 ### `onboarding_data_map.html`
 

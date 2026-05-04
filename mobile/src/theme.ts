@@ -1,17 +1,24 @@
 export const colors = {
-  background: "#F6F4EF",
-  surface: "#FFFDF8",
-  surfaceMuted: "#EEEAE1",
-  text: "#1F2825",
-  muted: "#68726C",
-  line: "#DED8CD",
-  green: "#0F6B5D",
-  greenSoft: "#DDEFE9",
-  amber: "#D4892F",
-  amberSoft: "#F7E7D0",
-  red: "#B94A48",
-  blue: "#2D628F",
-  blueSoft: "#DDEAF3"
+  background: "#ffffff",
+  surface: "rgba(255, 255, 255, 0.72)",
+  surfaceMuted: "#f7f7f7",
+  text: "#151515",
+  muted: "#8c8c8c",
+  line: "#d9d9d9",
+  accent: "#e93565",
+  green: "#e93565",
+  greenSoft: "rgba(233, 53, 101, 0.12)",
+  amber: "#151515",
+  amberSoft: "#f7f7f7",
+  red: "#e93565",
+  blue: "#151515",
+  blueSoft: "#f7f7f7",
+  card: "rgba(255, 255, 255, 0.72)"
+};
+
+export const fonts = {
+  display: "The Year of the Camel",
+  fallback: "Georgia"
 };
 
 export const spacing = {
@@ -23,8 +30,8 @@ export const spacing = {
 };
 
 export const radius = {
-  sm: 8,
-  md: 12,
-  lg: 18,
-  xl: 26
+  sm: 6,
+  md: 8,
+  lg: 12,
+  xl: 16
 };
