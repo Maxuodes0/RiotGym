@@ -19,8 +19,9 @@
       <a href="#features">المزايا</a>
       <a href="#flow">التجربة</a>
       <a href="#tech">التقنية</a>
+      <a href="#signup">إنشاء حساب</a>
     </nav>
-    <a class="header-action" href="#access">ابدأ الآن</a>
+    <a class="header-action" href="#signup">إنشاء حساب</a>
   </header>
 
   <main id="top">
@@ -30,7 +31,7 @@
         <h1 id="hero-title">RiotGym</h1>
         <p class="hero-lead">كل تمرين، وجبة، قياس، وهدف في مكان واحد. واجهة بيضاء هادئة، أرقام واضحة، وتجربة مبنية عشان تستخدمها يوميًا بدون تشتيت.</p>
         <div class="hero-actions">
-          <a class="primary-link" href="#product">شوف التطبيق</a>
+          <a class="primary-link" href="#signup">أنشئ حساب</a>
           <a class="secondary-link" href="#features">اعرف المزايا</a>
         </div>
       </div>
@@ -138,10 +139,68 @@
       </div>
     </section>
 
-    <section class="access-section" id="access">
-      <p class="eyebrow">المرحلة الحالية</p>
-      <h2>الموقع للتعريف، والتطبيق هو المنتج.</h2>
-      <p>الخطوة التالية داخل المشروع هي إكمال واجهات تسجيل الدخول وإنشاء الحساب في تطبيق الجوال وربطها مباشرة بالباكند والداتا بيس.</p>
+    <section class="signup-section" id="signup">
+      <div class="signup-copy">
+        <p class="eyebrow">إنشاء حساب من الويب</p>
+        <h2>افتح حساب RiotGym واربطه بالداتا بيس.</h2>
+        <p>هذا النموذج ينشئ مستخدم حقيقي في الباكند. بعد التسجيل تقدر تستخدم نفس الحساب في تطبيق الجوال.</p>
+      </div>
+
+      <form class="signup-form" id="signupForm">
+        <div class="form-grid">
+          <label>
+            الاسم
+            <input name="name" autocomplete="name" required minlength="2" placeholder="مثال: محمد">
+          </label>
+          <label>
+            البريد الإلكتروني
+            <input name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+          </label>
+          <label>
+            كلمة المرور
+            <input name="password" type="password" autocomplete="new-password" required minlength="8" placeholder="8 أحرف أو أكثر">
+          </label>
+          <label>
+            الجنس
+            <select name="gender" required>
+              <option value="male">ذكر</option>
+              <option value="female">أنثى</option>
+            </select>
+          </label>
+          <label>
+            العمر
+            <input name="age" type="number" required min="13" max="100" value="25">
+          </label>
+          <label>
+            الطول cm
+            <input name="heightCm" type="number" required min="100" max="240" value="175">
+          </label>
+          <label>
+            الوزن الحالي kg
+            <input name="currentWeightKg" type="number" required min="30" max="300" step="0.1" value="80">
+          </label>
+          <label>
+            وزن الهدف kg
+            <input name="targetWeightKg" type="number" required min="30" max="300" step="0.1" value="75">
+          </label>
+          <label>
+            الهدف
+            <select name="goal" required>
+              <option value="lose">تنشيف / نزول وزن</option>
+              <option value="maintain">ثبات</option>
+              <option value="gain">زيادة عضلية</option>
+            </select>
+          </label>
+          <label>
+            أيام التمرين أسبوعيًا
+            <input name="workoutDaysPerWeek" type="number" required min="1" max="7" value="4">
+          </label>
+        </div>
+
+        <button class="submit-button" type="submit">إنشاء الحساب</button>
+        <p class="form-note">القيم المتقدمة مثل مستوى النشاط والخبرة تُرسل تلقائيًا كإعدادات بداية وتقدر نعدلها لاحقًا في التطبيق.</p>
+        <p class="form-status" id="signupStatus" role="status" aria-live="polite"></p>
+      </form>
     </section>
   </main>
 
@@ -150,6 +209,6 @@
     <span>White editorial fitness tracking product.</span>
   </footer>
 
-  <script src="./app.js?v=product-site-1"></script>
+  <script src="./app.js?v=web-signup-1"></script>
 </body>
 </html>

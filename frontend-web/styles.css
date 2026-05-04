@@ -273,7 +273,7 @@ h3 {
   background: rgba(233, 53, 101, .1);
 }
 
-.intro-band, .tech-section, .access-section {
+.intro-band, .tech-section, .signup-section {
   display: grid;
   grid-template-columns: minmax(260px, .8fr) minmax(0, 1fr);
   gap: clamp(24px, 5vw, 80px);
@@ -281,7 +281,7 @@ h3 {
   border-bottom: 1px solid var(--line);
 }
 
-.intro-band p:last-child, .access-section p:last-child {
+.intro-band p:last-child, .signup-copy p:last-child {
   color: var(--gray);
   font-size: clamp(22px, 3vw, 34px);
   line-height: 1.4;
@@ -366,19 +366,85 @@ h3 {
   background: var(--card);
 }
 
-.access-section {
-  display: block;
-  text-align: center;
+.signup-section {
+  align-items: start;
 }
 
-.access-section h2 {
-  max-width: 900px;
-  margin: 0 auto 24px;
+.signup-copy {
+  position: sticky;
+  top: 110px;
 }
 
-.access-section p:last-child {
-  max-width: 760px;
-  margin: 0 auto;
+.signup-copy h2 {
+  margin-bottom: 24px;
+}
+
+.signup-form {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: clamp(18px, 3vw, 28px);
+  background: var(--card);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.signup-form label {
+  display: grid;
+  gap: 8px;
+  color: var(--gray);
+  font-size: 15px;
+}
+
+.signup-form input, .signup-form select {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 12px;
+  background: white;
+  color: var(--text);
+  font: inherit;
+}
+
+.signup-form input:focus, .signup-form select:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.submit-button {
+  width: 100%;
+  min-height: 52px;
+  margin-top: 18px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--text);
+  color: white;
+  font: inherit;
+  cursor: pointer;
+}
+
+.submit-button:disabled {
+  cursor: wait;
+  opacity: .68;
+}
+
+.form-note, .form-status {
+  margin-top: 14px;
+  color: var(--gray);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.form-status.success {
+  color: var(--accent);
+}
+
+.form-status.error {
+  color: var(--text);
 }
 
 .site-footer {
@@ -401,8 +467,12 @@ h3 {
     display: none;
   }
 
-  .hero-section, .intro-band, .tech-section {
+  .hero-section, .intro-band, .tech-section, .signup-section {
     grid-template-columns: 1fr;
+  }
+
+  .signup-copy {
+    position: static;
   }
 
   .hero-section {
@@ -500,8 +570,12 @@ h3 {
     min-height: 370px;
   }
 
-  .intro-band, .feature-section, .flow-section, .tech-section, .access-section {
+  .intro-band, .feature-section, .flow-section, .tech-section, .signup-section {
     padding: 60px 14px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
   }
 
   .feature-grid {
