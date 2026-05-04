@@ -14,7 +14,7 @@ export function errorHandler(error: unknown, _req: Request, res: Response, _next
 
   if (isDatabaseConnectionError(error)) {
     console.error(error);
-    res.status(503).json({ error: "Database is unreachable. Check Railway public networking settings." });
+    res.status(503).json({ error: "تعذر الاتصال بقاعدة البيانات. تأكد من Public Networking في Railway." });
     return;
   }
 

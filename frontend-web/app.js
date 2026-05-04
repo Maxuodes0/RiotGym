@@ -60,7 +60,7 @@ signupForm?.addEventListener("submit", async (event) => {
     const data = await response.json().catch(() => ({}));
     if (!response.ok) {
       const message = data.error || "تعذر إنشاء الحساب. تأكد أن الباكند شغال.";
-      if (message.includes("Database is unreachable")) {
+      if (message.includes("Database is unreachable") || message.includes("تعذر الاتصال بقاعدة البيانات")) {
         throw new Error("تعذر الاتصال بقاعدة البيانات. تأكد من Public Networking في Railway أو حدّث رابط DATABASE_URL.");
       }
       if (message.includes("Email already exists")) {
