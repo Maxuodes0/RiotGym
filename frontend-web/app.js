@@ -59,7 +59,14 @@ signupForm?.addEventListener("submit", async (event) => {
 
     const data = await response.json().catch(() => ({}));
     if (!response.ok) {
-      throw new Error(data.error || "تعذر إنشاء الحساب. تأكد أن الباكند شغال.");
+      const message = data.error || "تعذر إنشاء الحساب. تأكد أن الباكند شغال.";
+      if (message.includes("Database is unreachable")) {
+        throw new Error("تعذر الاتصال بقاعدة البيانات. تأكد من Public Networking في Railway أو حدّث رابط DATABASE_URL.");
+      }
+      if (message.includes("Email already exists")) {
+        throw new Error("هذا البريد مسجل مسبقًا.");
+      }
+      throw new Error(message);
     }
 
     setSignupStatus(`تم إنشاء الحساب بنجاح: ${data.user?.email || payload.email}`, "success");
