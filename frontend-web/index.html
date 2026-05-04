@@ -4,225 +4,152 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#ffffff">
-  <title>Gym Tracker</title>
-  <link rel="stylesheet" href="./styles.css?v=theme-guide-1">
+  <title>RiotGym | تطبيق تتبع التمرين والتغذية</title>
+  <meta name="description" content="RiotGym تطبيق جوال لتتبع التمارين، التغذية، القياسات، والأهداف بواجهة تحريرية بسيطة وبيانات حقيقية.">
+  <link rel="stylesheet" href="./styles.css?v=product-site-1">
 </head>
 <body>
-  <div class="app-shell">
-    <aside class="sidebar" aria-label="Primary navigation">
-      <div class="brand">
-        <div class="brand-mark">GT</div>
-        <div>
-          <strong>Gym Tracker</strong>
-          <span>لوحة المتابعة</span>
-        </div>
-      </div>
-
-      <nav class="nav-list">
-        <button class="nav-item active" data-view="dashboard" type="button"><span class="nav-icon">⌂</span><span>الرئيسية</span></button>
-        <button class="nav-item" data-view="workouts" type="button"><span class="nav-icon">▦</span><span>التمارين</span></button>
-        <button class="nav-item" data-view="nutrition" type="button"><span class="nav-icon">◐</span><span>التغذية</span></button>
-        <button class="nav-item" data-view="progress" type="button"><span class="nav-icon">⌁</span><span>التقدم</span></button>
-        <button class="nav-item" data-view="goals" type="button"><span class="nav-icon">◎</span><span>الأهداف</span></button>
-      </nav>
-
-      <div class="sidebar-card">
-        <span class="eyebrow">هذا الأسبوع</span>
-        <strong>3 / 4 تمارين</strong>
-        <div class="mini-meter"><span style="width:75%"></span></div>
-      </div>
-    </aside>
-
-    <main class="main">
-      <header class="topbar">
-        <div>
-          <p class="date-label" id="todayLabel">اليوم</p>
-          <h1 id="viewTitle">الرئيسية</h1>
-        </div>
-        <div class="topbar-actions">
-          <button class="primary-button" id="quickLogBtn" type="button"><span>+</span> تسجيل سريع</button>
-        </div>
-      </header>
-
-      <section class="view active" id="dashboard">
-        <div class="dashboard-grid">
-          <article class="hero-panel">
-            <div>
-              <span class="eyebrow">ملخص اليوم</span>
-              <h2>أداء ثابت، باقي وجبة وتمرين خفيف</h2>
-              <p>السعرات والبروتين قريبين من الهدف، وتمرين Push جاهز للتسجيل.</p>
-            </div>
-            <div class="rings">
-              <div class="ring" style="--value:76;--ring:#e93565"><span>76%</span><small>سعرات</small></div>
-              <div class="ring" style="--value:89;--ring:#151515"><span>89%</span><small>بروتين</small></div>
-            </div>
-          </article>
-
-          <article class="stat-card">
-            <span>السعرات</span>
-            <strong>1,840</strong>
-            <small>من 2,400 kcal</small>
-          </article>
-          <article class="stat-card">
-            <span>البروتين</span>
-            <strong>142g</strong>
-            <small>من 160g</small>
-          </article>
-          <article class="stat-card">
-            <span>الوزن</span>
-            <strong>84.2</strong>
-            <small>-0.6 kg هذا الشهر</small>
-          </article>
-          <article class="stat-card">
-            <span>حجم التمرين</span>
-            <strong>12.4k</strong>
-            <small>kg volume</small>
-          </article>
-        </div>
-
-        <div class="content-grid">
-          <article class="panel">
-            <div class="panel-header">
-              <div>
-                <span class="eyebrow">تمرين اليوم</span>
-                <h3>Push Day</h3>
-              </div>
-              <button class="ghost-button" data-view-jump="workouts" type="button">فتح</button>
-            </div>
-            <div class="exercise-list" id="todayWorkout"></div>
-          </article>
-
-          <article class="panel">
-            <div class="panel-header">
-              <div>
-                <span class="eyebrow">آخر 7 أيام</span>
-                <h3>النشاط</h3>
-              </div>
-            </div>
-            <canvas id="activityChart" height="190" aria-label="Activity chart"></canvas>
-          </article>
-        </div>
-      </section>
-
-      <section class="view" id="workouts">
-        <div class="split-layout">
-          <article class="panel workout-builder">
-            <div class="panel-header">
-              <div>
-                <span class="eyebrow">Workout</span>
-                <h3>Push Day</h3>
-              </div>
-              <button class="primary-button compact" id="finishWorkoutBtn" type="button">إنهاء التمرين</button>
-            </div>
-            <div id="workoutEditor"></div>
-          </article>
-
-          <aside class="panel">
-            <div class="panel-header">
-              <div>
-                <span class="eyebrow">Templates</span>
-                <h3>جدول الأسبوع</h3>
-              </div>
-            </div>
-            <div class="template-list" id="templateList"></div>
-          </aside>
-        </div>
-      </section>
-
-      <section class="view" id="nutrition">
-        <div class="content-grid nutrition-grid">
-          <article class="panel">
-            <div class="panel-header">
-              <div>
-                <span class="eyebrow">Macros</span>
-                <h3>تغذية اليوم</h3>
-              </div>
-              <button class="ghost-button" id="addMealBtn" type="button">إضافة وجبة</button>
-            </div>
-            <div class="macro-stack" id="macroStack"></div>
-          </article>
-
-          <article class="panel">
-            <div class="panel-header">
-              <div>
-                <span class="eyebrow">Meals</span>
-                <h3>الوجبات</h3>
-              </div>
-            </div>
-            <div class="meal-list" id="mealList"></div>
-          </article>
-        </div>
-      </section>
-
-      <section class="view" id="progress">
-        <div class="content-grid">
-          <article class="panel">
-            <div class="panel-header">
-              <div>
-                <span class="eyebrow">Body</span>
-                <h3>الوزن والقياسات</h3>
-              </div>
-            </div>
-            <canvas id="weightChart" height="230" aria-label="Weight chart"></canvas>
-          </article>
-          <article class="panel">
-            <div class="panel-header">
-              <div>
-                <span class="eyebrow">Records</span>
-                <h3>أرقام شخصية</h3>
-              </div>
-            </div>
-            <div class="record-list" id="recordList"></div>
-          </article>
-        </div>
-      </section>
-
-      <section class="view" id="goals">
-        <div class="goals-grid" id="goalsGrid"></div>
-      </section>
-    </main>
-
-    <nav class="mobile-nav" aria-label="Mobile navigation">
-      <button class="mobile-nav-item active" data-view="dashboard" type="button">⌂<span>الرئيسية</span></button>
-      <button class="mobile-nav-item" data-view="workouts" type="button">▦<span>تمارين</span></button>
-      <button class="mobile-nav-item" data-view="nutrition" type="button">◐<span>تغذية</span></button>
-      <button class="mobile-nav-item" data-view="progress" type="button">⌁<span>تقدم</span></button>
-      <button class="mobile-nav-item" data-view="goals" type="button">◎<span>أهداف</span></button>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="RiotGym">
+      <span class="brand-dot"></span>
+      <span>RiotGym</span>
+    </a>
+    <nav class="nav-links" aria-label="روابط الموقع">
+      <a href="#product">المنتج</a>
+      <a href="#features">المزايا</a>
+      <a href="#flow">التجربة</a>
+      <a href="#tech">التقنية</a>
     </nav>
-  </div>
+    <a class="header-action" href="#access">ابدأ الآن</a>
+  </header>
 
-  <dialog class="quick-dialog" id="quickDialog">
-    <form method="dialog">
-      <div class="panel-header">
-        <div>
-          <span class="eyebrow">Quick Log</span>
-          <h3>تسجيل سريع</h3>
+  <main id="top">
+    <section class="hero-section" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">تطبيق جوال للتمرين والتغذية</p>
+        <h1 id="hero-title">RiotGym</h1>
+        <p class="hero-lead">كل تمرين، وجبة، قياس، وهدف في مكان واحد. واجهة بيضاء هادئة، أرقام واضحة، وتجربة مبنية عشان تستخدمها يوميًا بدون تشتيت.</p>
+        <div class="hero-actions">
+          <a class="primary-link" href="#product">شوف التطبيق</a>
+          <a class="secondary-link" href="#features">اعرف المزايا</a>
         </div>
-        <button class="icon-button" value="cancel" type="submit" aria-label="إغلاق">×</button>
       </div>
-      <div class="quick-grid">
-        <label>النوع
-          <select id="quickType">
-            <option value="workout">تمرين</option>
-            <option value="meal">وجبة</option>
-            <option value="weight">وزن</option>
-          </select>
-        </label>
-        <label>القيمة
-          <input id="quickValue" placeholder="مثال: 84.2 أو 500 kcal">
-        </label>
-        <label class="full">ملاحظة
-          <textarea id="quickNote" rows="3" placeholder="اكتب ملاحظة قصيرة"></textarea>
-        </label>
-      </div>
-      <menu>
-        <button class="ghost-button" value="cancel" type="submit">إلغاء</button>
-        <button class="primary-button" id="saveQuickLog" value="default" type="submit">حفظ</button>
-      </menu>
-    </form>
-  </dialog>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="./app.js?v=theme-guide-1"></script>
+      <div class="product-visual" aria-label="معاينة واجهة تطبيق RiotGym">
+        <div class="phone-shell">
+          <div class="phone-status">
+            <span>9:41</span>
+            <span>RiotGym</span>
+          </div>
+          <div class="phone-screen">
+            <div class="app-top">
+              <span class="mini-dot"></span>
+              <div>
+                <strong>الرئيسية</strong>
+                <small>ملخص اليوم</small>
+              </div>
+            </div>
+            <div class="metric-hero">
+              <span>السعرات</span>
+              <strong>1,840</strong>
+              <small>من 2,400 kcal</small>
+            </div>
+            <div class="phone-grid">
+              <div><span>بروتين</span><strong>142g</strong></div>
+              <div><span>وزن</span><strong>84.2</strong></div>
+            </div>
+            <div class="progress-card">
+              <span>تمرين اليوم</span>
+              <strong>Push Day</strong>
+              <div class="progress-line"><span style="width:76%"></span></div>
+            </div>
+            <div class="phone-tabs">
+              <span class="active">⌂</span>
+              <span>▦</span>
+              <span>◐</span>
+              <span>⌁</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="intro-band" id="product">
+      <div>
+        <p class="eyebrow">الفكرة</p>
+        <h2>منتج واضح، مو لوحة أرقام مزيفة.</h2>
+      </div>
+      <p>RiotGym مصمم كتطبيق جوال فعلي. الموقع هنا يعرف بالمنتج، أما التسجيل، الدخول، وتتبع البيانات اليومية تكون داخل تطبيق الموبايل المتصل بقاعدة البيانات.</p>
+    </section>
+
+    <section class="feature-section" id="features" aria-labelledby="features-title">
+      <div class="section-heading">
+        <p class="eyebrow">المزايا</p>
+        <h2 id="features-title">كل شيء يحتاجه المستخدم بدون زحمة.</h2>
+      </div>
+      <div class="feature-grid">
+        <article>
+          <span>01</span>
+          <h3>تسجيل حساب ودخول</h3>
+          <p>بداية واضحة: تسجيل دخول أو إنشاء حساب، وبعدها بيانات المستخدم تُقرأ من قاعدة البيانات.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h3>تتبع التمارين</h3>
+          <p>حفظ التمارين، التكرارات، الأوزان، ودرجة الجهد لكل مستخدم بشكل مستقل.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h3>التغذية اليومية</h3>
+          <p>تسجيل الوجبات والسعرات والبروتين وربطها بهدف المستخدم بدل بيانات وهمية ثابتة.</p>
+        </article>
+        <article>
+          <span>04</span>
+          <h3>القياسات والأهداف</h3>
+          <p>متابعة الوزن، القياسات، ونسبة التقدم مع حفظ سجل يومي مرتب.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="flow-section" id="flow">
+      <div class="section-heading">
+        <p class="eyebrow">التجربة</p>
+        <h2>من أول فتح للتطبيق إلى متابعة التقدم.</h2>
+      </div>
+      <div class="flow-list">
+        <div><strong>01</strong><span>إنشاء الحساب وتسجيل بيانات البداية.</span></div>
+        <div><strong>02</strong><span>اختيار الهدف وخطة المتابعة.</span></div>
+        <div><strong>03</strong><span>تسجيل التمارين والوجبات يوميًا.</span></div>
+        <div><strong>04</strong><span>قراءة التقدم من بيانات حقيقية محفوظة.</span></div>
+      </div>
+    </section>
+
+    <section class="tech-section" id="tech">
+      <div>
+        <p class="eyebrow">التقنية</p>
+        <h2>موبايل أولًا، باكند واضح، وداتا بيس جاهزة.</h2>
+      </div>
+      <div class="tech-pills">
+        <span>Expo Mobile</span>
+        <span>Node Backend</span>
+        <span>PostgreSQL</span>
+        <span>Railway</span>
+        <span>Secure Auth</span>
+      </div>
+    </section>
+
+    <section class="access-section" id="access">
+      <p class="eyebrow">المرحلة الحالية</p>
+      <h2>الموقع للتعريف، والتطبيق هو المنتج.</h2>
+      <p>الخطوة التالية داخل المشروع هي إكمال واجهات تسجيل الدخول وإنشاء الحساب في تطبيق الجوال وربطها مباشرة بالباكند والداتا بيس.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>RiotGym</span>
+    <span>White editorial fitness tracking product.</span>
+  </footer>
+
+  <script src="./app.js?v=product-site-1"></script>
 </body>
 </html>
