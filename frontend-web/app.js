@@ -9,6 +9,7 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
 
 const signupForm = document.getElementById("signupForm");
 const signupStatus = document.getElementById("signupStatus");
+const apiBaseUrl = `${window.location.protocol}//${window.location.hostname}:4000`;
 
 function toNumber(value) {
   return Number.parseFloat(value);
@@ -50,7 +51,7 @@ signupForm?.addEventListener("submit", async (event) => {
   setSignupStatus("جاري إنشاء الحساب...");
 
   try {
-    const response = await fetch("http://localhost:4000/api/auth/register", {
+    const response = await fetch(`${apiBaseUrl}/api/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
