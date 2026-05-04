@@ -1,28 +1,38 @@
+@font-face {
+  font-family: "The Year of the Camel";
+  src: url("./assets/fonts/TheYearofTheCamel-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "The Year of the Camel";
+  src: url("./assets/fonts/TheYearofTheCamel-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  --bg: #f6f4ef;
-  --surface: #fffdf8;
-  --surface-2: #eeebe3;
-  --text: #1f2825;
-  --muted: #6c746f;
-  --line: #ded9ce;
-  --green: #0f6b5d;
-  --green-2: #1f7a6d;
-  --amber: #d4892f;
-  --red: #b94a48;
-  --blue: #2d628f;
-  --shadow: 0 18px 45px rgba(35, 40, 35, .08);
+  --bg: #ffffff;
+  --surface: rgba(255, 255, 255, .72);
+  --surface-2: #f7f7f7;
+  --text: #151515;
+  --muted: #8c8c8c;
+  --line: #d9d9d9;
+  --accent: #e93565;
+  --green: #e93565;
+  --green-2: #e93565;
+  --amber: #151515;
+  --red: #e93565;
+  --blue: #151515;
+  --shadow: 0 18px 40px rgba(21, 21, 21, .06);
   color-scheme: light;
 }
 
 [data-theme="dark"] {
-  --bg: #151816;
-  --surface: #202520;
-  --surface-2: #2a302b;
-  --text: #f3f0e8;
-  --muted: #a9b0aa;
-  --line: #3b433d;
-  --shadow: 0 18px 45px rgba(0, 0, 0, .22);
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 * { box-sizing: border-box; }
@@ -30,10 +40,8 @@ html { min-height: 100%; }
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-  background:
-    radial-gradient(circle at 12% 8%, rgba(15, 107, 93, .08), transparent 30%),
-    linear-gradient(135deg, var(--bg), var(--surface-2));
+  font-family: "The Year of the Camel", Georgia, "Times New Roman", serif;
+  background: var(--bg);
   color: var(--text);
 }
 
@@ -50,13 +58,13 @@ button { cursor: pointer; }
   min-height: 100vh;
   padding: 22px;
   border-left: 1px solid var(--line);
-  background: rgba(255, 253, 248, .72);
+  background: var(--surface);
   backdrop-filter: blur(18px);
   position: sticky;
   top: 0;
 }
 
-[data-theme="dark"] .sidebar { background: rgba(32, 37, 32, .72); }
+[data-theme="dark"] .sidebar { background: var(--surface); }
 
 .brand {
   display: flex;
@@ -66,18 +74,19 @@ button { cursor: pointer; }
 }
 
 .brand-mark {
-  width: 44px;
-  height: 44px;
+  width: 14px;
+  height: 14px;
   display: grid;
   place-items: center;
-  border-radius: 8px;
-  background: var(--green);
-  color: white;
-  font-weight: 800;
+  border-radius: 50%;
+  background: var(--accent);
+  color: transparent;
+  font-size: 0;
 }
 
 .brand strong, .brand span { display: block; }
-.brand span { color: var(--muted); font-size: 13px; margin-top: 2px; }
+.brand strong { font-size: 22px; letter-spacing: 0; }
+.brand span { color: var(--muted); font-size: 14px; margin-top: 2px; }
 
 .nav-list { display: grid; gap: 8px; }
 .nav-item, .mobile-nav-item {
@@ -167,7 +176,7 @@ h3 { font-size: 18px; letter-spacing: 0; }
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: var(--green);
+  background: var(--text);
   color: white;
   font-weight: 700;
 }
@@ -214,9 +223,7 @@ h3 { font-size: 18px; letter-spacing: 0; }
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  background:
-    linear-gradient(100deg, rgba(15, 107, 93, .13), transparent 54%),
-    var(--surface);
+  background: var(--surface);
   overflow: hidden;
 }
 
@@ -283,9 +290,9 @@ h3 { font-size: 18px; letter-spacing: 0; }
   padding: 5px 9px;
   border-radius: 999px;
   font-size: 12px;
-  color: var(--green);
-  background: rgba(15, 107, 93, .11);
-  border: 1px solid rgba(15, 107, 93, .18);
+  color: var(--accent);
+  background: rgba(233, 53, 101, .1);
+  border: 1px solid rgba(233, 53, 101, .18);
 }
 
 .split-layout {
@@ -391,7 +398,7 @@ menu { padding: 0; margin: 16px 0 0; display: flex; justify-content: flex-end; g
   padding: 12px 14px;
   border-radius: 8px;
   color: white;
-  background: var(--green);
+  background: var(--text);
   opacity: 0;
   transform: translateY(10px);
   transition: .2s;
@@ -405,7 +412,7 @@ canvas {
   width: 100%;
   max-width: 100%;
   border-radius: 8px;
-  background: linear-gradient(180deg, rgba(15, 107, 93, .06), transparent);
+  background: transparent;
 }
 
 @media (max-width: 1040px) {
@@ -441,7 +448,7 @@ canvas {
     font-size: 18px;
   }
   .mobile-nav-item span { display: block; font-size: 11px; }
-  .mobile-nav-item.active { color: var(--green); background: rgba(15, 107, 93, .1); }
+  .mobile-nav-item.active { color: var(--accent); background: rgba(233, 53, 101, .1); }
 }
 
 @media (max-width: 640px) {

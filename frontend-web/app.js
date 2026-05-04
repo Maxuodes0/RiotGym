@@ -225,7 +225,7 @@ function drawLineChart() {
     ctx.lineTo(width, y);
     ctx.stroke();
   }
-  ctx.strokeStyle = "#0f6b5d";
+  ctx.strokeStyle = "#e93565";
   ctx.lineWidth = 3;
   ctx.beginPath();
   values.forEach((value, index) => {
@@ -238,7 +238,7 @@ function drawLineChart() {
   values.forEach((value, index) => {
     const x = 18 + index * ((width - 36) / (values.length - 1));
     const y = 18 + ((max - value) / (max - min)) * (height - 48);
-    ctx.fillStyle = "#0f6b5d";
+    ctx.fillStyle = "#e93565";
     ctx.beginPath();
     ctx.arc(x, y, 4, 0, Math.PI * 2);
     ctx.fill();
@@ -258,7 +258,7 @@ function roundRect(ctx, x, y, width, height, radius, color) {
 }
 
 function drawCharts() {
-  drawBarChart("activityChart", [42, 68, 35, 82, 48, 74, 58], ["س", "ح", "ن", "ث", "ر", "خ", "ج"], "#0f6b5d");
+  drawBarChart("activityChart", [42, 68, 35, 82, 48, 74, 58], ["س", "ح", "ن", "ث", "ر", "خ", "ج"], "#e93565");
   drawLineChart();
 }
 
@@ -307,11 +307,6 @@ function bindEvents() {
   document.getElementById("addMealBtn").addEventListener("click", () => showToast("واجهة الوجبات جاهزة للربط مع الباكند"));
   document.getElementById("quickLogBtn").addEventListener("click", () => document.getElementById("quickDialog").showModal());
   document.getElementById("saveQuickLog").addEventListener("click", () => showToast("تم حفظ التسجيل محليًا"));
-  document.getElementById("themeToggle").addEventListener("click", () => {
-    const dark = document.documentElement.dataset.theme === "dark";
-    document.documentElement.dataset.theme = dark ? "" : "dark";
-    requestAnimationFrame(drawCharts);
-  });
   window.addEventListener("resize", drawCharts);
 }
 
